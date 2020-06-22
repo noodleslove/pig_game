@@ -1,5 +1,4 @@
 const express = require('express');
-const socket = require('socket.io');
 
 
 // Setup app
@@ -13,9 +12,7 @@ const server = app.listen(8000, () => {
 app.use(express.static('public'));
 
 
-// Setup socket
-const io = socket(server);
-
-io.on('connection', socket => {
-    console.log('made connection');
+// Setup routing
+app.get('/', (request, response) => {
+    response.sendFile(path.join(__dirname, 'public', 'index.html'));
 });

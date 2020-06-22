@@ -9,8 +9,6 @@ GAME RULES:
 
 */
 
-var socket = io.connect('http://127.0.0.1:8000');
-
 var scores, roundScore, activePlayer, gamePlaying;
 
 init();
@@ -35,7 +33,7 @@ document.querySelector('.btn-roll').addEventListener('click', function(){
             scores[activePlayer] = 0;
             document.getElementById('score-' + activePlayer).textContent = 0;
             // next player
-            nextPlayer();
+            nextPlayer(1000);
         } else if (dice1 !== 1 && dice2 !== 1) {
             // add score
             roundScore += dice1 + dice2;
@@ -103,27 +101,40 @@ function nextPlayer(theTimeout) {
     var listAll = document.querySelectorAll('.dice');
 
 	// Find the cubes with value of 1
-	var listOnes = document.querySelectorAll("[src='dice-1.png']");
+    var listOnes = document.querySelectorAll("[src='dice-1.png']");
+    var listSixs = document.querySelectorAll("[src='dice-6.png']");
 
 	if(listOnes.length > 0){
-		for (var i = 0; i < listOnes.length; i++ ) {
+		for (let i = 0; i < listOnes.length; i++ ) {
 			// Forbid clicking on the button ROLL DICE while animating
 			document.querySelector('.btn-roll').setAttribute('disabled','disabled');
-			listOnes[i].classList.add('shake');
-		}
+            listOnes[i].classList.add('shake');
+        }
+    }
+
+    if (listSixs.length === 2) {    
+        for (let i = 0; i < listSixs.length; i++) {
+            // Forbid clicking on the button ROLL DICE while animating
+            document.querySelector('.btn-roll').setAttribute('disabled','disabled');
+            listSixs[i].classList.add('shake');
+        }
 	}
 
 	// hide the dices
 	setTimeout(function(theTimeout){
-		for (var ii = 0; ii < listAll.length; ii++ ) {
-			listAll[ii].style.display = 'none';
-			// if dice with one is om a table - shake it
-			if(listOnes[ii]){
-				listOnes[ii].classList.remove('shake');
-			}
+		for (let i = 0; i < listAll.length; i++ ) {
+			listAll[i].style.display = 'none';
+			// if dice with one is on a table - shake it
+			if (listOnes[i]) {
+				listOnes[i].classList.remove('shake');
+            }
+            // if dice with six is on a table - shake it
+            if (listSixs[i]) {
+                listSixs[i].classList.remove('shake');
+            }
 			// make the ROLL DICE button working again
 			document.querySelector('.btn-roll').removeAttribute('disabled');
-		}
+        }
 	}, theTimeout);
 }
 
